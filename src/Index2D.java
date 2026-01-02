@@ -25,11 +25,13 @@ public class Index2D implements Pixel2D {
     }
 
     public double distance2D(Pixel2D t) {
-        double ans = 0;
-        /////// add your code below ///////
+        if (t == null) {
+            throw new  NullPointerException("other pixel is null");
+        }
 
-        ///////////////////////////////////
-        return ans;
+        int dx =  t.getX() - _x;
+        int dy = t.getY() - _y;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     @Override
