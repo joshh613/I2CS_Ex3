@@ -23,7 +23,7 @@ public class Ex3Algo implements PacManAlgo{
 	}
 	@Override
 	/**
-	 * This ia the main method - that you should design, implement and test.
+	 * This is the main method - that you should design, implement and test.
 	 */
 	public int move(PacmanGame game) {
 		if(_count==0 || _count==300) {
