@@ -13,53 +13,42 @@ This project is divided into:
 
 #### Data
 
-Our algorithm has access to:
+We have access to:
 
 - `int[][] board = game.getGame(0)` the game board.
     - `0`/`black` is empty
     - `1`/`blue` is wall
     - `3`/`pink` is food
     - `5`/`green` is power-up
-- `String[] pos = game.getPos(code).split(",")` pac-man's position
-- `GhostCL[] ghosts = game.getGhosts(code)` array of ghost data
-    - `g.getStatus()` is whether the ghost is eatable
-    - `g.getType()` is the ghosts algorithm type (based on the decompiled classes, it seems 10 and 11 are random walk
-      while 12 is a shortest path algo)
-    - `g.getPos(0)` is the ghost position (starting at 11,11)
-    - `g.remainTimeAsEatable(0)` is the time remaining eatable (5ish seconds after eating power-up and then it counts
+- `game.isCyclic()` boolean whether is board is cyclic
+- `String pos = game.getPos(0)` pac-man's position as a string (`x,y`)
+- `GhostCL[] ghosts = game.getGhosts(0)` array of ghost data. For each ghost `g` we have:
+    - `g.getStatus()` whether the ghost is eatable
+    - `g.getType()` the ghosts algorithm type (based on the decompiled classes, apparently 10/11 are random walk
+      while 12 is shortest path)
+    - `g.getPos(0)` the ghost position (starting at 11,11)
+    - `g.remainTimeAsEatable(0)` the time remaining eatable (5ish seconds after eating power-up, and then it counts
       down (with no lower limit))
+- `game.getData(0)` contains 1. time, 2. score, 3. steps, 4. kills, 5. pos, 6. dots
 
 #### Factors
 
-1. Our algorithm must avoid colliding with ghosts at all costs.
-2. Ideally, we want to finish the level ASAP (i.e. collect all the food and power-ups).
-3. Eating ghosts (via power-ups) is a bonus.
+An optimal algorithm would perform as follows:
 
-> [!NOTE]
-> The map is cyclic.
+1. Avoid colliding with (non edible) ghosts at all costs.
+    1. Create a buffer between pacman and the ghosts (larger for type 12 ghosts).
+    2. Make sure that pacman won't get trapped between a ghost and a wall/ghost.
+2. If both ghosts and power-ups are nearby, try to get the power-up and eat the ghosts
+3. Otherwise, route the (cyclic) map and collect all the food
 
 #### Logic
 
-We will create the following 'modes':
+Draft 2:
 
-1. Normal - path towards the closest food / power-up / eatable ghost (with `remainTimeAsEatable>2`)
-2. Flee - path away from the ghosts
+First, consider the distances to each ghost and power-up.
 
-We will use BFS to implement normal mode, as follows:
+- If there is a reachable and eatable ghosts, try path towards them (in order of proximity)
+- If there is a power-up nearby and a ghost nearby, try path towards it
+- Otherwise, consider all ghosts as obstacles (plus a buffer around them)
 
-1. Treat walls and tiles with "_close_" to (non-eatable) ghosts as obstacles. ("_Close_" meaning 'has a path distance
-   less than `5`')
-2. Find the shortest path to (in the following order) eatable ghost (with `remainTimeAsEatable>2`) > power-up > food
-
-We will use a distance map to implement flee mode, all follows:
-
-1. Using `allDistance`, create a "danger map" for each ghost
-2. Combine all said danger maps (by taking the minimum value for each tile)
-3. Move towards the least dangerous (reachable) tile
-
-The algorithm defaults to normal mode and only switches to flee if:
-
-- A (non-eatable) ghost has a path distance less than `3`
-- Normal mode fails to produce a path
-
-Once the condition for flee mode is no longer satisfied, we return to normal mode.
+Next, find a path towards food. Slightly penalise paths that require turning around.
