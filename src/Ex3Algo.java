@@ -12,14 +12,20 @@ import java.util.Arrays;
  * Your task is to implement (here) your PacMan algorithm.
  */
 public class Ex3Algo implements PacManAlgo {
-    private static final int code = 0;
-    private static final int blue = Game.getIntColor(Color.BLUE, code);
-    private static final int pink = Game.getIntColor(Color.PINK, code);
-    private static final int black = Game.getIntColor(Color.BLACK, code);
-    private static final int green = Game.getIntColor(Color.GREEN, code);
-    private static final int up = Game.UP, left = Game.LEFT, down = Game.DOWN, right = Game.RIGHT;
+    private static final int CODE = 0;
+
+    private static final int BLUE = Game.getIntColor(Color.BLUE, CODE);
+    private static final int PINK = Game.getIntColor(Color.PINK, CODE);
+    private static final int BLACK = Game.getIntColor(Color.BLACK, CODE);
+    private static final int GREEN = Game.getIntColor(Color.GREEN, CODE);
+
+    private static final int UP = Game.UP, LEFT = Game.LEFT, DOWN = Game.DOWN, RIGHT = Game.RIGHT;
 
     private int _count;
+    private int[][] _board;
+    private Map _map;
+    private Index2D _pacman;
+    private GhostCL[] _ghosts;
 
     public Ex3Algo() {
         _count = 0;
@@ -38,23 +44,16 @@ public class Ex3Algo implements PacManAlgo {
      * This is the main method - that you should design, implement and test.
      */
     public int move(PacmanGame game) {
-        int[][] board = game.getGame(0);
-        String[] pos = game.getPos(code).split(",");
-        Index2D pacman = new Index2D(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]));
-        GhostCL[] ghosts = game.getGhosts(code);
+        _board = game.getGame(CODE);
+        _map = new Map(_board);
+        _map.setCyclic(game.isCyclic());
+        _pacman = getPacman(game);
+        _ghosts = game.getGhosts(CODE);
 
-        if (_count % 60 == 0) {
-            printBoard(board);
-            System.out.println("Blue=" + blue + ", Pink=" + pink + ", Black=" + black + ", Green=" + green);
-            System.out.println("Pacman coordinate: " + Arrays.toString(pos));
-            printGhosts(ghosts);
+        if (_count++ % 60 == 0) {
+            log();
         }
 
-        Map map = new Map(board);
-        map.setCyclic(true);
-        Map2D dist = map.allDistance(pacman, black);
-
-        _count++;
         return randomDir();
     }
 
@@ -79,5 +78,17 @@ public class Ex3Algo implements PacManAlgo {
         int[] dirs = {Game.UP, Game.LEFT, Game.DOWN, Game.RIGHT};
         int ind = (int) (Math.random() * dirs.length);
         return dirs[ind];
+    }
+
+    private Index2D getPacman(PacmanGame game) {
+        String[] pos = game.getPos(CODE).split(",");
+        return new Index2D(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]));
+    }
+
+    private void log() {
+        printBoard(_board);
+        System.out.println("Blue=" + BLUE + ", Pink=" + PINK + ", Black=" + BLACK + ", Green=" + GREEN);
+        System.out.println("Pacman coordinate: " + _pacman.toString());
+        printGhosts(_ghosts);
     }
 }
