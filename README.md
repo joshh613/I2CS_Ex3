@@ -9,10 +9,71 @@ This project is divided into:
 1. Client side - An algorithm that guides the pac-man to eat dots and avoid ghosts.
 2. Server side - An engine that manages game logic, ghost AI, and GUI
 
-### The algorithm
+## The algorithm
 
-#### Data
+Each time the `move()` function is called, pac-man decided whether to move (`UP`,`DOWN`,`LEFT`,`RIGHT`) or not to move (
+`STAY`). Each of his five choices are considered, and the best choice is executed.
 
+### Step 1 - Build the danger map
+
+First, a 'danger map' is build. Each cell in this 2d-array represents how close that map tile is from the nearest ghost.
+
+### Step 2 - Choose a mode
+
+Next, we determine which mode(s) the pac-man is in. There are:
+- **Powered** (ghosts can be eaten)
+- **Panic** (a ghost is nearby)
+- **Normal** (a ghost is not nearby)
+
+### Step 3 - Choose a direction
+
+The pac-man evaluates each of the four directions, giving it a score (assuming it's a legal move, i.e. not a wall).
+
+The scoring function works as follows:
+
+#### Safety
+If not powered up, moving towards a ghost is negative and moving away is positive.
+
+The closer pac-man is to a ghost, the higher this coefficient is weighted.
+
+#### Traps
+We assume the given direction was chosen and then check how much open space remains.
+Large areas are positive, small areas are negative.
+
+This is always weighted quite high.
+
+#### Food
+Pac-man has two (sometimes three) choices of food. Dots and power-ups (and sometimes edible ghosts).
+
+If reachable (i.e. nearby and a high `timeLeftEatable`), we score moving towards a ghost highly.
+
+If ghosts are nearby (and pac-man is not powered up), we score moving towards power-ups highly.
+
+Otherwise, we score moving towards dots highly.
+
+#### Best route
+Tiles already visited have a small penalty.
+
+Also, moving 'backwards' (i.e. opposite to the previous direction taken) has a small penalty.
+
+---
+
+Once the score of each of the four directions is calculated, we consider the direction with the highest score.
+
+If it's above a given threshold, we choose that direction.
+Otherwise, we choose to stay still.
+
+### Step 4 - Make a move
+Before executing the move, we first save our position and the decision we have made.
+
+Finally, we execute the move (or lack thereof).
+
+## Possible improvements
+
+The danger map could be improved by exploring different algorithms for deciding the danger of a cell. Options include
+minimum distance, cumulative distance, and product of distances.
+
+## API
 We have access to:
 
 - `int[][] board = game.getGame(0)` the game board.
@@ -30,25 +91,3 @@ We have access to:
     - `g.remainTimeAsEatable(0)` the time remaining eatable (5ish seconds after eating power-up, and then it counts
       down (with no lower limit))
 - `game.getData(0)` contains 1. time, 2. score, 3. steps, 4. kills, 5. pos, 6. dots
-
-#### Factors
-
-An optimal algorithm would perform as follows:
-
-1. Avoid colliding with (non edible) ghosts at all costs.
-    1. Create a buffer between pacman and the ghosts (larger for type 12 ghosts).
-    2. Make sure that pacman won't get trapped between a ghost and a wall/ghost.
-2. If both ghosts and power-ups are nearby, try to get the power-up and eat the ghosts
-3. Otherwise, route the (cyclic) map and collect all the food
-
-#### Logic
-
-Draft 2:
-
-First, consider the distances to each ghost and power-up.
-
-- If there is a reachable and eatable ghosts, try path towards them (in order of proximity)
-- If there is a power-up nearby and a ghost nearby, try path towards it
-- Otherwise, consider all ghosts as obstacles (plus a buffer around them)
-
-Next, find a path towards food. Slightly penalise paths that require turning around.
