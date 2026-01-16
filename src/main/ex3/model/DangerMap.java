@@ -1,3 +1,5 @@
+package ex3.model;
+
 import exe.ex3.game.GhostCL;
 
 public class DangerMap {

@@ -1,3 +1,5 @@
+package ex3.model;
+
 public class Index2D implements Pixel2D {
     private final int _x;
     private final int _y;

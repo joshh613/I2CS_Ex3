@@ -1,3 +1,6 @@
+package ex3.client;
+
+import ex3.Ex3Main;
 import exe.ex3.game.PacManAlgo;
 import exe.ex3.game.PacmanGame;
 
@@ -5,7 +8,7 @@ public class ManualAlgo implements PacManAlgo{
     public ManualAlgo() {;}
     @Override
     public String getInfo() {
-        return "This is a manual algorithm for manual controlling the PacMan using w,a,x,d (up,left,down,right).";
+        return "This is a manual algorithm for manual controlling the main.java.ex3.model.PacMan using w,a,x,d (up,left,down,right).";
     }
 
     @Override

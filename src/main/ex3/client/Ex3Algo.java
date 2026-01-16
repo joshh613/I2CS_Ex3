@@ -1,27 +1,23 @@
-import exe.ex3.game.Game;
+package ex3.client;
+
+import ex3.model.DangerMap;
+import ex3.model.Index2D;
+import ex3.model.Map;
+import ex3.model.PacMan;
 import exe.ex3.game.GhostCL;
 import exe.ex3.game.PacManAlgo;
 import exe.ex3.game.PacmanGame;
 
-import java.awt.*;
+import static ex3.util.GameConstants.*;
 
 /**
- * This is the major algorithmic class for Ex3 - the PacMan game:
+ * This is the major algorithmic class for Ex3 - the main.java.ex3.model.PacMan game:
  * This code is a very simple example (random-walk algorithm).
- * Your task is to implement (here) your PacMan algorithm.
+ * Your task is to implement (here) your main.java.ex3.model.PacMan algorithm.
  */
 public class Ex3Algo implements PacManAlgo {
-    private static final int CODE = 0;
-
-    private static final int BLUE = Game.getIntColor(Color.BLUE, CODE);
-    private static final int PINK = Game.getIntColor(Color.PINK, CODE);
-    private static final int BLACK = Game.getIntColor(Color.BLACK, CODE);
-    private static final int GREEN = Game.getIntColor(Color.GREEN, CODE);
-
-    private static final int[] DIRS = {Game.UP, Game.LEFT, Game.DOWN, Game.RIGHT};
-    private static final int STAY = Game.STAY;
-
     private int count;
+
     private PacMan pacMan;
 
     private Map map;
@@ -30,25 +26,19 @@ public class Ex3Algo implements PacManAlgo {
 
     private DangerMap dangerMap;
 
-    private int safetyLevel;
-    private boolean isPowered;
-    private boolean isPanic;
+    private AlgoScoring scorer;
 
     public Ex3Algo() {
         count = 0;
     }
 
     @Override
-    /**
-     *  Add a short description for the algorithm as a String.
-     */ public String getInfo() {
+    public String getInfo() {
         return "Pac-man AI using a heatmap, direction scoring, and travel modes.";
     }
 
     @Override
-    /**
-     * This is the main method - that you should design, implement and test.
-     */ public int move(PacmanGame game) {
+    public int move(PacmanGame game) {
         if (count == 0) {
             init(game);
         } else {
@@ -59,16 +49,12 @@ public class Ex3Algo implements PacManAlgo {
             log(game);
         }
 
-        safetyLevel = dangerMap.getSafetyLevel(pacMan);
-        isPowered = isPowered(game);
-        isPanic = isPanic(safetyLevel, isPowered);
-
         double bestScore = Double.NEGATIVE_INFINITY;
         int bestDir = STAY;
         Index2D tile;
         for (int dir : DIRS) {
             tile = calcTile(dir);
-            double score = calcScore(tile);
+            double score = scorer.score(tile);
             if (score > bestScore) {
                 bestScore = score;
                 bestDir = dir;
@@ -95,6 +81,8 @@ public class Ex3Algo implements PacManAlgo {
         height = board[0].length;
         GhostCL[] ghosts = game.getGhosts(CODE);
         dangerMap = new DangerMap(map, ghosts);
+
+        scorer = new Scorer(map, dangerMap, pacMan);
     }
 
     private void update(PacmanGame game) {
@@ -102,6 +90,11 @@ public class Ex3Algo implements PacManAlgo {
         map = new Map(board);
         GhostCL[] ghosts = game.getGhosts(CODE);
         dangerMap.update(map, ghosts);
+
+        int safetyLevel = dangerMap.getSafetyLevel(pacMan);
+        boolean isPowered = isPowered(game);
+        boolean isPanic = isPanic(safetyLevel, isPowered);
+        scorer.update(safetyLevel, isPowered, isPanic);
     }
 
     private Index2D calcTile(int dir) {
@@ -109,16 +102,16 @@ public class Ex3Algo implements PacManAlgo {
         int x = pos.getX();
         int y = pos.getY();
         switch (dir) {
-            case Game.UP:
+            case UP:
                 y--;
                 break;
-            case Game.LEFT:
+            case LEFT:
                 x--;
                 break;
-            case Game.DOWN:
+            case DOWN:
                 y++;
                 break;
-            case Game.RIGHT:
+            case RIGHT:
                 x++;
                 break;
         }
@@ -148,7 +141,7 @@ public class Ex3Algo implements PacManAlgo {
             System.out.println();
         }
 
-        System.out.println("Blue=" + BLUE + ", Pink=" + PINK + ", Black=" + BLACK + ", Green=" + GREEN);
+        System.out.println("Empty=" + EMPTY + ", Wall=" + WALL + ", DOT=" + DOT + ", POWERUP=" + POWERUP);
         System.out.println("Pacman coordinate: " + pacMan.toString());
 
         GhostCL[] ghosts = game.getGhosts(CODE);

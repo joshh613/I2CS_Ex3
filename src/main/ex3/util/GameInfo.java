@@ -1,3 +1,7 @@
+package ex3.util;
+
+import ex3.client.Ex3Algo;
+import ex3.client.ManualAlgo;
 import exe.ex3.game.PacManAlgo;
 /**
  * This class contains all the needed parameters for the Pacman game.

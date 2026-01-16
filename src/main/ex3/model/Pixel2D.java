@@ -1,3 +1,5 @@
+package ex3.model;
+
 /**
  * This interface represents an integer based coordinate of a 2D raster (aka a 2D matrix).
  */

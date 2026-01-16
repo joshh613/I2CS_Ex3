@@ -1,3 +1,5 @@
+package ex3.model;
+
 import java.util.Arrays;
 
 public class PacMan {

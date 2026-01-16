@@ -1,3 +1,5 @@
+package ex3.model;
+
 /**
  * This interface represents a 2D map as a raster matrix or maze.
  * The data is assumed to be a rectangular 2D matrix (not a ragged array).

@@ -1,3 +1,5 @@
+package ex3.model;
+
 import java.util.LinkedList;
 
 /**
@@ -310,6 +312,15 @@ public class Map implements Map2D {
             }
         }
         return new Map(dist);
+    }
+
+    public void update(int[][] arr) {
+        if (arr.length != _width || arr[0].length != _height) throw new IllegalArgumentException("wrong dimensions");
+        for (int x = 0; x < _width; x++) {
+            for (int y = 0; y < _height; y++) {
+                setPixel(x, y, arr[x][y]);
+            }
+        }
     }
 
     // HELPER METHODS
