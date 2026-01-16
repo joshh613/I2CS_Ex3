@@ -1,5 +1,6 @@
 public class Index2D implements Pixel2D {
-    private int _x, _y;
+    private final int _x;
+    private final int _y;
 
     public Index2D() {
         this(0, 0);
@@ -26,10 +27,10 @@ public class Index2D implements Pixel2D {
 
     public double distance2D(Pixel2D t) {
         if (t == null) {
-            throw new  NullPointerException("other pixel is null");
+            throw new NullPointerException("other pixel is null");
         }
 
-        int dx =  t.getX() - _x;
+        int dx = t.getX() - _x;
         int dy = t.getY() - _y;
         return Math.sqrt(dx * dx + dy * dy);
     }
@@ -42,12 +43,10 @@ public class Index2D implements Pixel2D {
     @Override
     public boolean equals(Object t) {
         boolean ans = false;
-        /////// you do NOT need to add your code below ///////
         if (t instanceof Pixel2D) {
             Pixel2D p = (Pixel2D) t;
             ans = (this.distance2D(p) == 0);
         }
-        ///////////////////////////////////
         return ans;
     }
 }
