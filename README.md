@@ -16,13 +16,13 @@ Each time the `move()` function is called, pac-man decided whether to move (`UP`
 
 ### Step 1 - Build the danger map
 
-First, a 'danger map' is build. Each cell in this 2d-array represents how close that map tile is from the nearest ghost.
+First, a 'danger map' is built(/updated). Each cell in this 2d-array represents how close that map tile is from the nearest ghost.
 
 ### Step 2 - Choose a mode
 
 Next, we determine which mode(s) the pac-man is in. There are:
 - **Powered** (ghosts can be eaten)
-- **Panic** (a ghost is nearby)
+- **Panic** (pac-man is _not_ powered-up _and_ a ghost is "nearby")
 - **Normal** (a ghost is not nearby)
 
 ### Step 3 - Choose a direction
@@ -64,7 +64,7 @@ If it's above a given threshold, we choose that direction.
 Otherwise, we choose to stay still.
 
 ### Step 4 - Make a move
-Before executing the move, we first save our position and the decision we have made.
+Before executing the move, we store the current tile in memory and record the chosen direction.
 
 Finally, we execute the move (or lack thereof).
 
