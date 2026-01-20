@@ -1,29 +1,32 @@
 package ex3.model;
 
 /**
- * This interface represents an integer based coordinate of a 2D raster (aka a 2D matrix).
+ * Represents an {@code (x,y)} coordinate in a 2D grid. The coordinate is (1) integer and (2) immutable.
  */
 public interface Pixel2D {
     /**
-     * @return the X coordinate (integer) of the pixel.
+     *
+     * @return the x-coordinate (column index)
      */
-    public int getX();
-    /**
-     * @return the Y coordinate (integer) of the pixel.
-     */
-    public int getY();
-
-    /**
-     * This method computes the 2D (Euclidean) distance beteen this pixel and p2 pixel, i.e., (Math.sqrt(dx*dx+dy*dy))
-     * @throws RuntimeException if p2==null.
-     * @return the 2D Euclidean distance between the pixels.
-     */
-    public double distance2D(Pixel2D p2);
+    int getX();
 
     /**
      *
-     * @return a String representation of this coordinate.
+     * @return the y-coordinate (row index)
      */
-    public String toString();
+    int getY();
 
+    /**
+     * Computes the Euclidean distance between this pixel and another pixel (using the formula {@code sqrt(dx*dx + dy*dy)}.
+     *
+     * @param other the other pixel
+     * @return the Euclidean distance between the pixels
+     * @throws NullPointerException if {@code other} is {@code null}
+     */
+    default double distance2D(Pixel2D other) {
+        if (other == null) throw new NullPointerException("other pixel is null");
+        int dx = other.getX() - getX();
+        int dy = other.getY() - getY();
+        return Math.hypot(dx, dy);
+    }
 }
