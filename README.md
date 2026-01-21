@@ -79,13 +79,6 @@ minimum distance, cumulative distance, and product of distances.
 See our algorithm being demonstrated on the original game server.
 
 
-Uploading algorithm.mp4…
-
-
 
 ## Game engine
 A quick guide for how to use our game engine. Currently, only the (above) AI is playable.
-
-
-Uploading game_engine.mp4…
-
