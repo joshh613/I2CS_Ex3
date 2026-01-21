@@ -72,3 +72,12 @@ Finally, we execute the move (or lack thereof).
 
 The danger map could be improved by exploring different algorithms for deciding the danger of a cell. Options include
 minimum distance, cumulative distance, and product of distances.
+
+# Demonstrations
+
+## Algorithm
+See our algorithm being demonstrated on the original game server.
+
+
+## Game engine
+A quick guide for how to use our game engine. Currently, only the (above) AI is playable.
