@@ -77,9 +77,8 @@ minimum distance, cumulative distance, and product of distances.
 
 ## Algorithm
 See our algorithm being demonstrated on the original game server.
-[Watch the demo](./algorithm.mp4)
-
+[Watch the demo](https://github.com/user-attachments/assets/fe3fab7a-b773-476c-b47a-150f87ab6dd7)
 
 ## Game engine
 A quick guide for how to use our game engine. Currently, only the (above) AI is playable.
-[Watch the demo](./game_engine.mp4)
+[Watch the demo](https://github.com/user-attachments/assets/4d319399-9eb7-4630-ac52-6549130210ef)
