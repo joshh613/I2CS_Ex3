@@ -72,22 +72,3 @@ Finally, we execute the move (or lack thereof).
 
 The danger map could be improved by exploring different algorithms for deciding the danger of a cell. Options include
 minimum distance, cumulative distance, and product of distances.
-
-## API
-We have access to:
-
-- `int[][] board = game.getGame(0)` the game board.
-    - `0`/`black` is empty
-    - `1`/`blue` is wall
-    - `3`/`pink` is food
-    - `5`/`green` is power-up
-- `game.isCyclic()` boolean whether is board is cyclic
-- `String pos = game.getPos(0)` pac-man's position as a string (`x,y`)
-- `GhostCL[] ghosts = game.getGhosts(0)` array of ghost data. For each ghost `g` we have:
-    - `g.getStatus()` whether the ghost is eatable
-    - `g.getType()` the ghosts algorithm type (based on the decompiled classes, apparently 10/11 are random walk
-      while 12 is shortest path)
-    - `g.getPos(0)` the ghost position (starting at 11,11)
-    - `g.remainTimeAsEatable(0)` the time remaining eatable (5ish seconds after eating power-up, and then it counts
-      down (with no lower limit))
-- `game.getData(0)` contains 1. time, 2. score, 3. steps, 4. kills, 5. pos, 6. dots
